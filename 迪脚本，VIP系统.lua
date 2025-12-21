@@ -142,34 +142,25 @@ detailLabel.TextScaled = true
 detailLabel.TextSize = 8
 detailLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- ============ 弹窗系统 ============
--- 创建弹窗背景
+-- ============ 优化后的弹窗系统 ============
+-- 创建弹窗背景（缩小尺寸）
 local popupBackground = Instance.new("Frame")
 popupBackground.Name = "PopupBackground"
 popupBackground.Parent = mainGui
 popupBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-popupBackground.BackgroundTransparency = 0.7
-popupBackground.Size = UDim2.new(1, 0, 1, 0)
-popupBackground.Position = UDim2.new(0, 0, 0, 0)
+popupBackground.BackgroundTransparency = 0.8
+popupBackground.Size = UDim2.new(0, 280, 0, 160)
+popupBackground.Position = UDim2.new(0.5, -140, 0.5, -80)
 popupBackground.Visible = false
 popupBackground.ZIndex = 10
-
--- 创建弹窗主容器
-local popupContainer = Instance.new("Frame")
-popupContainer.Name = "PopupContainer"
-popupContainer.Parent = popupBackground
-popupContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-popupContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-popupContainer.Size = UDim2.new(0, 300, 0, 200)
-popupContainer.BackgroundTransparency = 0.1
-popupContainer.ZIndex = 11
+popupBackground.AnchorPoint = Vector2.new(0.5, 0.5)
 
 -- VIP弹窗（金色豪华效果）
 local vipPopup = Instance.new("Frame")
 vipPopup.Name = "VIPPopup"
-vipPopup.Parent = popupContainer
+vipPopup.Parent = popupBackground
 vipPopup.Size = UDim2.new(1, 0, 1, 0)
-vipPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+vipPopup.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 vipPopup.BorderSizePixel = 0
 vipPopup.Visible = isVIP  -- 只有VIP显示
 
@@ -177,33 +168,33 @@ vipPopup.Visible = isVIP  -- 只有VIP显示
 local vipBorder = Instance.new("UIStroke")
 vipBorder.Parent = vipPopup
 vipBorder.Color = Color3.fromRGB(255, 215, 0)
-vipBorder.Thickness = 3
-vipBorder.Transparency = 0.2
+vipBorder.Thickness = 2
+vipBorder.Transparency = 0.3
 
 -- VIP弹窗标题
 local vipTitle = Instance.new("TextLabel")
 vipTitle.Name = "VIPTitle"
 vipTitle.Parent = vipPopup
 vipTitle.BackgroundTransparency = 1
-vipTitle.Size = UDim2.new(1, 0, 0, 40)
-vipTitle.Position = UDim2.new(0, 0, 0, 10)
+vipTitle.Size = UDim2.new(1, 0, 0, 30)
+vipTitle.Position = UDim2.new(0, 0, 0, 5)
 vipTitle.Font = Enum.Font.GothamBold
 vipTitle.Text = "✨ VIP 尊贵特权 ✨"
 vipTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
-vipTitle.TextSize = 20
+vipTitle.TextSize = 16
 vipTitle.TextScaled = false
 
--- VIP弹窗内容
+-- VIP弹窗内容（简化）
 local vipContent = Instance.new("TextLabel")
 vipContent.Name = "VIPContent"
 vipContent.Parent = vipPopup
 vipContent.BackgroundTransparency = 1
-vipContent.Size = UDim2.new(1, -40, 0, 80)
-vipContent.Position = UDim2.new(0, 20, 0, 60)
+vipContent.Size = UDim2.new(1, -20, 0, 70)
+vipContent.Position = UDim2.new(0, 10, 0, 40)
 vipContent.Font = Enum.Font.Gotham
-vipContent.Text = "尊敬的VIP用户，感谢您的支持！\n\n您享有以下特权：\n✓ 专属金色视觉效果\n✓ 倒计时彩虹渐变\n✓ 炫酷闪烁动画\n✓ 优先技术支持"
+vipContent.Text = "特权已解锁：\n• 金色VIP标识\n• 彩虹倒计时特效\n• 弹窗发光动画"
 vipContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-vipContent.TextSize = 14
+vipContent.TextSize = 12
 vipContent.TextWrapped = true
 vipContent.TextXAlignment = Enum.TextXAlignment.Left
 vipContent.TextYAlignment = Enum.TextYAlignment.Top
@@ -213,53 +204,53 @@ local vipButton = Instance.new("TextButton")
 vipButton.Name = "VIPButton"
 vipButton.Parent = vipPopup
 vipButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-vipButton.Size = UDim2.new(0, 100, 0, 30)
-vipButton.Position = UDim2.new(0.5, -50, 0.8, 0)
+vipButton.Size = UDim2.new(0, 80, 0, 25)
+vipButton.Position = UDim2.new(0.5, -40, 0.85, 0)
 vipButton.Font = Enum.Font.GothamBold
 vipButton.Text = "朕知道了"
 vipButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-vipButton.TextSize = 14
+vipButton.TextSize = 12
 vipButton.BorderSizePixel = 0
 
 -- 非VIP弹窗（普通效果）
 local nonVipPopup = Instance.new("Frame")
 nonVipPopup.Name = "NonVipPopup"
-nonVipPopup.Parent = popupContainer
+nonVipPopup.Parent = popupBackground
 nonVipPopup.Size = UDim2.new(1, 0, 1, 0)
-nonVipPopup.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+nonVipPopup.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 nonVipPopup.BorderSizePixel = 0
 nonVipPopup.Visible = not isVIP  -- 非VIP显示
 
 -- 非VIP弹窗边框（灰色）
 local nonVipBorder = Instance.new("UIStroke")
 nonVipBorder.Parent = nonVipPopup
-nonVipBorder.Color = Color3.fromRGB(150, 150, 150)
-nonVipBorder.Thickness = 2
-nonVipBorder.Transparency = 0.3
+nonVipBorder.Color = Color3.fromRGB(120, 120, 120)
+nonVipBorder.Thickness = 1.5
+nonVipBorder.Transparency = 0.4
 
 -- 非VIP弹窗标题
 local nonVipTitle = Instance.new("TextLabel")
 nonVipTitle.Name = "NonVipTitle"
 nonVipTitle.Parent = nonVipPopup
 nonVipTitle.BackgroundTransparency = 1
-nonVipTitle.Size = UDim2.new(1, 0, 0, 40)
-nonVipTitle.Position = UDim2.new(0, 0, 0, 10)
+nonVipTitle.Size = UDim2.new(1, 0, 0, 30)
+nonVipTitle.Position = UDim2.new(0, 0, 0, 5)
 nonVipTitle.Font = Enum.Font.Gotham
 nonVipTitle.Text = "普通用户提示"
-nonVipTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
-nonVipTitle.TextSize = 18
+nonVipTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
+nonVipTitle.TextSize = 14
 
--- 非VIP弹窗内容
+-- 非VIP弹窗内容（简化）
 local nonVipContent = Instance.new("TextLabel")
 nonVipContent.Name = "NonVipContent"
 nonVipContent.Parent = nonVipPopup
 nonVipContent.BackgroundTransparency = 1
-nonVipContent.Size = UDim2.new(1, -40, 0, 80)
-nonVipContent.Position = UDim2.new(0, 20, 0, 60)
+nonVipContent.Size = UDim2.new(1, -20, 0, 70)
+nonVipContent.Position = UDim2.new(0, 10, 0, 40)
 nonVipContent.Font = Enum.Font.Gotham
-nonVipContent.Text = "当前状态：普通用户\n\n功能可用：\n✓ 时间显示\n✓ 倒计时功能\n✓ 节日提醒\n\n升级VIP可解锁：\n✨ 金色视觉效果\n✨ 炫酷动画\n✨ 优先支持"
-nonVipContent.TextColor3 = Color3.fromRGB(200, 200, 200)
-nonVipContent.TextSize = 13
+nonVipContent.Text = "当前可用功能：\n• 实时时间显示\n• 节日倒计时\n• 弹窗提示\n\n升级VIP可解锁炫酷特效"
+nonVipContent.TextColor3 = Color3.fromRGB(180, 180, 180)
+nonVipContent.TextSize = 11
 nonVipContent.TextWrapped = true
 nonVipContent.TextXAlignment = Enum.TextXAlignment.Left
 nonVipContent.TextYAlignment = Enum.TextYAlignment.Top
@@ -268,19 +259,19 @@ nonVipContent.TextYAlignment = Enum.TextYAlignment.Top
 local nonVipButton = Instance.new("TextButton")
 nonVipButton.Name = "NonVipButton"
 nonVipButton.Parent = nonVipPopup
-nonVipButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-nonVipButton.Size = UDim2.new(0, 100, 0, 30)
-nonVipButton.Position = UDim2.new(0.5, -50, 0.8, 0)
+nonVipButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+nonVipButton.Size = UDim2.new(0, 80, 0, 25)
+nonVipButton.Position = UDim2.new(0.5, -40, 0.85, 0)
 nonVipButton.Font = Enum.Font.Gotham
 nonVipButton.Text = "明白了"
 nonVipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-nonVipButton.TextSize = 14
+nonVipButton.TextSize = 12
 nonVipButton.BorderSizePixel = 0
 
 -- 弹窗圆角效果
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = popupContainer
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = popupBackground
 
 local vipCorner = Instance.new("UICorner")
 vipCorner.CornerRadius = UDim.new(0, 8)
@@ -291,60 +282,234 @@ nonVipCorner.CornerRadius = UDim.new(0, 8)
 nonVipCorner.Parent = nonVipPopup
 
 local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.CornerRadius = UDim.new(0, 5)
 buttonCorner.Parent = vipButton
 buttonCorner:Clone().Parent = nonVipButton
 
 -- VIP弹窗按钮点击事件
 vipButton.MouseButton1Click:Connect(function()
-    -- VIP关闭弹窗的华丽效果
     popupBackground.Visible = false
-    -- VIP关闭音效（如果游戏支持）
-    if game:GetService("SoundService") then
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://3570574687"  -- 华丽的音效
-        sound.Volume = 0.3
-        sound.Parent = game.Workspace
-        sound:Play()
-        game:GetService("Debris"):AddItem(sound, 3)
-    end
 end)
 
 -- 非VIP弹窗按钮点击事件
 nonVipButton.MouseButton1Click:Connect(function()
-    -- 普通关闭弹窗
     popupBackground.Visible = false
 end)
 
--- 弹窗显示函数
+-- 弹窗显示函数（简化动画）
 local function showPopup()
     popupBackground.Visible = true
+    popupBackground.Size = UDim2.new(0, 10, 0, 10)
+    popupBackground.Position = UDim2.new(0.5, -5, 0.5, -5)
     
-    -- VIP用户的额外动画效果
+    -- 展开动画
+    for i = 1, 10 do
+        popupBackground.Size = UDim2.new(0, 10 + i * 27, 0, 10 + i * 15)
+        popupBackground.Position = UDim2.new(0.5, 0, 0.5, 0)
+        task.wait(0.01)
+    end
+    
+    -- VIP用户的额外闪烁效果
     if isVIP then
-        -- VIP弹窗进入动画
-        popupContainer.Size = UDim2.new(0, 10, 0, 10)
-        popupContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-        
-        -- VIP弹窗展开动画
-        for i = 1, 20 do
-            popupContainer.Size = UDim2.new(0, 10 + i * 15, 0, 10 + i * 10)
-            popupContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-            task.wait(0.01)
-        end
-        
-        -- VIP弹窗发光闪烁
         task.spawn(function()
             while popupBackground.Visible and isVIP do
-                vipBorder.Transparency = 0.2 + math.sin(tick() * 2) * 0.1
+                vipBorder.Transparency = 0.3 + math.sin(tick() * 3) * 0.2
                 task.wait(0.05)
             end
         end)
-    else
-        -- 非VIP用户简单显示
-        popupContainer.Size = UDim2.new(0, 300, 0, 200)
     end
 end
+
+-- ============ 新增：对局玩家检测系统 ============
+local Players = game:GetService("Players")
+local playerListGui = Instance.new("ScreenGui")
+playerListGui.Name = "PlayerListGUI"
+playerListGui.Parent = game.CoreGui
+playerListGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- 玩家列表容器（右上角）
+local playerListContainer = Instance.new("Frame")
+playerListContainer.Name = "PlayerListContainer"
+playerListContainer.Parent = playerListGui
+playerListContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+playerListContainer.BackgroundTransparency = 0.1
+playerListContainer.BorderSizePixel = 0
+playerListContainer.Position = UDim2.new(0.98, -200, 0.01, 45)
+playerListContainer.AnchorPoint = Vector2.new(1, 0)
+playerListContainer.Size = UDim2.new(0, 195, 0, 30)
+playerListContainer.Visible = false  -- 默认隐藏，需要时显示
+
+-- 圆角
+local listCorner = Instance.new("UICorner")
+listCorner.CornerRadius = UDim.new(0, 6)
+listCorner.Parent = playerListContainer
+
+-- 边框
+local listBorder = Instance.new("UIStroke")
+listBorder.Parent = playerListContainer
+listBorder.Color = Color3.fromRGB(60, 60, 80)
+listBorder.Thickness = 1.5
+
+-- 标题栏
+local listTitle = Instance.new("TextLabel")
+listTitle.Name = "ListTitle"
+listTitle.Parent = playerListContainer
+listTitle.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+listTitle.Size = UDim2.new(1, 0, 0, 25)
+listTitle.Font = Enum.Font.GothamBold
+listTitle.Text = "对局玩家检测"
+listTitle.TextColor3 = Color3.fromRGB(220, 220, 220)
+listTitle.TextSize = 12
+listTitle.TextXAlignment = Enum.TextXAlignment.Center
+
+-- 标题栏圆角（仅顶部）
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 6)
+titleCorner.Parent = listTitle
+
+-- 玩家列表滚动框
+local playerListScrolling = Instance.new("ScrollingFrame")
+playerListScrolling.Name = "PlayerListScrolling"
+playerListScrolling.Parent = playerListContainer
+playerListScrolling.BackgroundTransparency = 1
+playerListScrolling.Position = UDim2.new(0, 0, 0, 25)
+playerListScrolling.Size = UDim2.new(1, 0, 1, -25)
+playerListScrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
+playerListScrolling.ScrollBarThickness = 4
+playerListScrolling.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
+
+-- 玩家列表UI列表布局
+local playerListUIList = Instance.new("UIListLayout")
+playerListUIList.Parent = playerListScrolling
+playerListUIList.SortOrder = Enum.SortOrder.Name
+playerListUIList.Padding = UDim.new(0, 2)
+
+-- 显示/隐藏玩家列表的按钮
+local toggleListButton = Instance.new("TextButton")
+toggleListButton.Name = "ToggleListButton"
+toggleListButton.Parent = mainGui
+toggleListButton.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+toggleListButton.BackgroundTransparency = 0.1
+toggleListButton.Position = UDim2.new(0.98, -35, 0.01, 45)
+toggleListButton.AnchorPoint = Vector2.new(1, 0)
+toggleListButton.Size = UDim2.new(0, 30, 0, 30)
+toggleListButton.Font = Enum.Font.GothamBold
+toggleListButton.Text = "👥"
+toggleListButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+toggleListButton.TextSize = 14
+toggleListButton.BorderSizePixel = 0
+
+-- 按钮圆角和边框
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 6)
+toggleCorner.Parent = toggleListButton
+
+local toggleBorder = Instance.new("UIStroke")
+toggleBorder.Parent = toggleListButton
+toggleBorder.Color = Color3.fromRGB(60, 60, 80)
+toggleBorder.Thickness = 1.5
+
+-- 玩家列表切换功能
+local isListVisible = false
+toggleListButton.MouseButton1Click:Connect(function()
+    isListVisible = not isListVisible
+    playerListContainer.Visible = isListVisible
+    toggleListButton.BackgroundColor3 = isListVisible and Color3.fromRGB(45, 45, 65) or Color3.fromRGB(35, 35, 45)
+    
+    if isListVisible then
+        updatePlayerList()
+    end
+end)
+
+-- 更新玩家列表函数
+function updatePlayerList()
+    -- 清空现有列表
+    for _, child in ipairs(playerListScrolling:GetChildren()) do
+        if child:IsA("Frame") then
+            child:Destroy()
+        end
+    end
+    
+    local players = Players:GetPlayers()
+    local vipCount = 0
+    local totalCount = #players
+    
+    -- 为每个玩家创建显示项
+    for _, player in ipairs(players) do
+        local isPlayerVIP = false
+        
+        -- 检查是否为VIP
+        for _, vipName in ipairs(VIP_USERS) do
+            if vipName == player.Name then
+                isPlayerVIP = true
+                vipCount = vipCount + 1
+                break
+            end
+        end
+        
+        local playerItem = Instance.new("Frame")
+        playerItem.Name = player.Name
+        playerItem.Parent = playerListScrolling
+        playerItem.BackgroundTransparency = 1
+        playerItem.Size = UDim2.new(1, -10, 0, 20)
+        
+        local playerColor = Instance.new("Frame")
+        playerColor.Name = "ColorIndicator"
+        playerColor.Parent = playerItem
+        playerColor.BackgroundColor3 = isPlayerVIP and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(100, 100, 120)
+        playerColor.Size = UDim2.new(0, 4, 1, 0)
+        playerColor.BorderSizePixel = 0
+        
+        local playerNameLabel = Instance.new("TextLabel")
+        playerNameLabel.Name = "PlayerName"
+        playerNameLabel.Parent = playerItem
+        playerNameLabel.BackgroundTransparency = 1
+        playerNameLabel.Position = UDim2.new(0, 8, 0, 0)
+        playerNameLabel.Size = UDim2.new(0.6, -8, 1, 0)
+        playerNameLabel.Font = Enum.Font.Gotham
+        playerNameLabel.Text = player.Name
+        playerNameLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        playerNameLabel.TextSize = 11
+        playerNameLabel.TextXAlignment = Enum.TextXAlignment.Left
+        playerNameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+        
+        local playerStatusLabel = Instance.new("TextLabel")
+        playerStatusLabel.Name = "PlayerStatus"
+        playerStatusLabel.Parent = playerItem
+        playerStatusLabel.BackgroundTransparency = 1
+        playerStatusLabel.Position = UDim2.new(0.6, 5, 0, 0)
+        playerStatusLabel.Size = UDim2.new(0.4, -5, 1, 0)
+        playerStatusLabel.Font = Enum.Font.Gotham
+        playerStatusLabel.Text = isPlayerVIP and "VIP会员" or "未使用脚本"
+        playerStatusLabel.TextColor3 = isPlayerVIP and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(150, 150, 150)
+        playerStatusLabel.TextSize = 10
+        playerStatusLabel.TextXAlignment = Enum.TextXAlignment.Right
+    end
+    
+    -- 更新标题显示统计信息
+    listTitle.Text = string.format("玩家检测 (VIP: %d/%d)", vipCount, totalCount)
+    
+    -- 更新滚动区域大小
+    playerListScrolling.CanvasSize = UDim2.new(0, 0, 0, playerListUIList.AbsoluteContentSize.Y)
+    
+    -- 调整容器高度（最多显示10个玩家）
+    local maxHeight = math.min(totalCount * 22 + 25, 10 * 22 + 25)
+    playerListContainer.Size = UDim2.new(0, 195, 0, maxHeight)
+end
+
+-- 监听玩家加入/离开事件
+Players.PlayerAdded:Connect(function(player)
+    if isListVisible then
+        updatePlayerList()
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if isListVisible then
+        task.wait(0.5) -- 等待玩家完全离开
+        updatePlayerList()
+    end
+end)
 
 -- 点击容器显示弹窗
 container.InputBegan:Connect(function(input)
@@ -523,10 +688,6 @@ local function updateTime()
     end
 end
 
--- 启动动画和时间更新
-task.spawn(vipPulseAnimation)
-task.spawn(updateTime)
-
 -- 添加鼠标悬停提示
 local tooltip = Instance.new("TextLabel")
 tooltip.Name = "Tooltip"
@@ -559,7 +720,15 @@ end)
 task.wait(2)
 showPopup()
 
--- 可选：显示当前用户状态
+-- 启动动画和时间更新
+task.spawn(vipPulseAnimation)
+task.spawn(updateTime)
+
+-- 显示当前用户状态
 print("[VIP系统] 当前用户:", playerName)
 print("[VIP系统] VIP状态:", isVIP and "是VIP用户" or "非VIP用户")
-print("[VIP系统] 点击时间显示区域查看弹窗")
+print("[VIP系统] 功能说明:")
+print("  • 点击时间显示区域: 查看VIP状态弹窗")
+print("  • 点击👥按钮: 显示/隐藏对局玩家检测列表")
+print("  • 弹窗尺寸优化: 更小更简洁")
+print("  • 玩家检测: 实时监控对局中的VIP用户")
