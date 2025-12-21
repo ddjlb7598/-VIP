@@ -4,6 +4,7 @@ local VIP_USERS = {
     "wuckdfs",  -- 示例用户2
     "eggyparty36",  -- 示例用户3
     "ejshsh83",
+    "ZUU138458",
 }
 
 -- 获取当前玩家用户名
