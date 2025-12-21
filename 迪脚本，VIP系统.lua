@@ -3,7 +3,7 @@ local VIP_USERS = {
     "hnperezho647",  -- 示例用户1（脚本作者）
     "wuckdfs",  -- 示例用户2
     "eggyparty36",  -- 示例用户3
-    -- 在此处添加更多VIP用户名
+    "ejshsh83",
 }
 
 -- 获取当前玩家用户名
