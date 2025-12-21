@@ -2,7 +2,7 @@
 local VIP_USERS = {
     "hnperezho647",  -- 示例用户1
     "wuckdfs",  -- 示例用户2
-    "Player3",  -- 示例用户3
+    "eggyparty36",  -- 示例用户3
     -- 在此处添加更多VIP用户名
 }
 
