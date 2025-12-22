@@ -1,6 +1,6 @@
 -- VIP用户名单（请在此处添加VIP用户名）
 local VIP_USERS = {
-    "hnperezho647",  -- 示例用户1（脚本作者）
+    "hnperezho647",  -- 示例用户1
     "wuckdfs",  -- 示例用户2
     "eggyparty36",  -- 示例用户3
     "ejshsh83",
@@ -306,7 +306,7 @@ if isVIP then
     vipGlow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 end
 
--- 时间标签（所有用户都显示）
+-- 时间标签（所有用户都显示）- 修改为彩虹色
 local timeLabel = Instance.new("TextLabel")
 timeLabel.Name = "TimeLabel"
 timeLabel.Parent = container
@@ -361,7 +361,7 @@ leftLabel.TextScaled = true
 leftLabel.TextSize = 8
 leftLabel.TextXAlignment = Enum.TextXAlignment.Right
 
--- 详细时间显示（所有用户都显示）
+-- 详细时间显示（所有用户都显示）- 修改为彩虹色
 local detailLabel = Instance.new("TextLabel")
 detailLabel.Name = "DetailLabel"
 detailLabel.Parent = container
@@ -812,17 +812,142 @@ end)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 
+-- ============ 新增：消息确认弹窗系统 ============
+local messageConfirmGui = Instance.new("ScreenGui")
+messageConfirmGui.Name = "MessageConfirmGUI"
+messageConfirmGui.Parent = game.CoreGui
+messageConfirmGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- 确认弹窗背景
+local confirmBackground = Instance.new("Frame")
+confirmBackground.Name = "ConfirmBackground"
+confirmBackground.Parent = messageConfirmGui
+confirmBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+confirmBackground.BackgroundTransparency = 0.7
+confirmBackground.Size = UDim2.new(1, 0, 1, 0)
+confirmBackground.Position = UDim2.new(0, 0, 0, 0)
+confirmBackground.Visible = false
+confirmBackground.ZIndex = 99
+
+-- 确认弹窗主容器
+local confirmPopup = Instance.new("Frame")
+confirmPopup.Name = "ConfirmPopup"
+confirmPopup.Parent = confirmBackground
+confirmPopup.Size = UDim2.new(0, 350, 0, 200)
+confirmPopup.Position = UDim2.new(0.5, -175, 0.5, -100)
+confirmPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+confirmPopup.BorderSizePixel = 0
+confirmPopup.AnchorPoint = Vector2.new(0.5, 0.5)
+
+-- 弹窗边框
+local confirmBorder = Instance.new("UIStroke")
+confirmBorder.Parent = confirmPopup
+confirmBorder.Color = isAuthor and Color3.fromRGB(255, 50, 50) or (isVIP and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(100, 100, 120))
+confirmBorder.Thickness = 2
+confirmBorder.Transparency = 0.3
+
+-- 圆角效果
+local confirmCorner = Instance.new("UICorner")
+confirmCorner.CornerRadius = UDim.new(0, 12)
+confirmCorner.Parent = confirmPopup
+
+-- 标题
+local confirmTitle = Instance.new("TextLabel")
+confirmTitle.Name = "ConfirmTitle"
+confirmTitle.Parent = confirmPopup
+confirmTitle.BackgroundTransparency = 1
+confirmTitle.Size = UDim2.new(1, 0, 0, 40)
+confirmTitle.Position = UDim2.new(0, 0, 0, 10)
+confirmTitle.Font = Enum.Font.GothamBold
+confirmTitle.Text = "📢 发送欢迎消息确认"
+confirmTitle.TextColor3 = isAuthor and Color3.fromRGB(255, 100, 100) or (isVIP and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(200, 200, 200))
+confirmTitle.TextSize = 18
+
+-- 消息内容
+local confirmMessage = Instance.new("TextLabel")
+confirmMessage.Name = "ConfirmMessage"
+confirmMessage.Parent = confirmPopup
+confirmMessage.BackgroundTransparency = 1
+confirmMessage.Size = UDim2.new(1, -40, 0, 60)
+confirmMessage.Position = UDim2.new(0, 20, 0, 60)
+confirmMessage.Font = Enum.Font.Gotham
+
+local welcomeText = ""
+if isAuthor then
+    welcomeText = "👑 迪脚本作者 " .. playerName .. " 已上线！"
+elseif isVIP then
+    welcomeText = "尊敬的VIP，欢迎使用迪脚本！"
+else
+    welcomeText = "欢迎使用迪脚本！"
+end
+
+confirmMessage.Text = "将发送以下消息到聊天框：\n\n\"" .. welcomeText .. "\"\n\n是否确认发送？"
+confirmMessage.TextColor3 = Color3.fromRGB(220, 220, 220)
+confirmMessage.TextSize = 13
+confirmMessage.TextWrapped = true
+confirmMessage.TextXAlignment = Enum.TextXAlignment.Center
+confirmMessage.TextYAlignment = Enum.TextYAlignment.Top
+
+-- 倒计时显示
+local countdownLabel = Instance.new("TextLabel")
+countdownLabel.Name = "CountdownLabel"
+countdownLabel.Parent = confirmPopup
+countdownLabel.BackgroundTransparency = 1
+countdownLabel.Size = UDim2.new(1, 0, 0, 20)
+countdownLabel.Position = UDim2.new(0, 0, 0, 125)
+countdownLabel.Font = Enum.Font.Gotham
+countdownLabel.Text = "10秒内未选择将默认不发送"
+countdownLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+countdownLabel.TextSize = 11
+
+-- 按钮容器
+local buttonContainer = Instance.new("Frame")
+buttonContainer.Name = "ButtonContainer"
+buttonContainer.Parent = confirmPopup
+buttonContainer.BackgroundTransparency = 1
+buttonContainer.Size = UDim2.new(1, -40, 0, 40)
+buttonContainer.Position = UDim2.new(0, 20, 0, 150)
+
+-- 发送按钮
+local sendButton = Instance.new("TextButton")
+sendButton.Name = "SendButton"
+sendButton.Parent = buttonContainer
+sendButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+sendButton.Size = UDim2.new(0, 100, 0, 35)
+sendButton.Position = UDim2.new(0, 0, 0, 0)
+sendButton.Font = Enum.Font.GothamBold
+sendButton.Text = "✅ 确认发送"
+sendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+sendButton.TextSize = 13
+
+-- 不发送按钮
+local dontSendButton = Instance.new("TextButton")
+dontSendButton.Name = "DontSendButton"
+dontSendButton.Parent = buttonContainer
+dontSendButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+dontSendButton.Size = UDim2.new(0, 100, 0, 35)
+dontSendButton.Position = UDim2.new(1, -100, 0, 0)
+dontSendButton.Font = Enum.Font.Gotham
+dontSendButton.Text = "❌ 不发送"
+dontSendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+dontSendButton.TextSize = 13
+
+-- 按钮圆角
+local buttonCorner1 = Instance.new("UICorner")
+buttonCorner1.CornerRadius = UDim.new(0, 6)
+buttonCorner1.Parent = sendButton
+
+local buttonCorner2 = Instance.new("UICorner")
+buttonCorner2.CornerRadius = UDim.new(0, 6)
+buttonCorner2.Parent = dontSendButton
+
+-- 变量跟踪确认状态
+local messageConfirmed = nil  -- nil: 未选择, true: 发送, false: 不发送
+local countdownTimer = 10
+
 -- 发送聊天消息的函数
 local function sendWelcomeMessage()
-    local message = ""
-    
-    if isAuthor then
-        message = "👑 迪脚本作者 " .. playerName .. " 已上线！"
-    elseif isVIP then
-        message = "尊敬的VIP，欢迎使用迪脚本！"
-    else
-        message = "欢迎使用迪脚本！"
-    end
+    local message = welcomeText
     
     -- 方法1：尝试使用TextChatService（Roblox新聊天系统）
     if TextChatService then
@@ -873,12 +998,102 @@ local function sendWelcomeMessage()
     print("[自动消息] 通过系统消息显示:", message)
 end
 
+-- 显示确认弹窗的函数
+local function showMessageConfirm()
+    confirmBackground.Visible = true
+    messageConfirmed = nil
+    countdownTimer = 10
+    
+    -- 初始动画
+    confirmPopup.Size = UDim2.new(0, 10, 0, 10)
+    confirmPopup.Position = UDim2.new(0.5, -5, 0.5, -5)
+    confirmPopup.BackgroundTransparency = 1
+    
+    -- 展开动画
+    for i = 1, 20 do
+        confirmPopup.Size = UDim2.new(0, 10 + i * 17, 0, 10 + i * 9.5)
+        confirmPopup.Position = UDim2.new(0.5, 0, 0.5, 0)
+        confirmPopup.BackgroundTransparency = 1 - (i * 0.05)
+        task.wait(0.01)
+    end
+    
+    -- 边框闪烁效果
+    task.spawn(function()
+        while confirmBackground.Visible and messageConfirmed == nil do
+            local pulse = 0.3 + math.sin(tick() * 3) * 0.2
+            confirmBorder.Transparency = pulse
+            task.wait(0.05)
+        end
+    end)
+    
+    -- 倒计时
+    task.spawn(function()
+        while confirmBackground.Visible and messageConfirmed == nil and countdownTimer > 0 do
+            countdownLabel.Text = string.format("%d秒内未选择将默认不发送", countdownTimer)
+            countdownTimer = countdownTimer - 1
+            task.wait(1)
+        end
+        
+        -- 倒计时结束
+        if confirmBackground.Visible and messageConfirmed == nil then
+            messageConfirmed = false
+            print("[消息确认] 倒计时结束，默认不发送消息")
+            
+            -- 关闭弹窗动画
+            for i = 1, 10 do
+                confirmPopup.BackgroundTransparency = 0.5 + (i * 0.05)
+                task.wait(0.02)
+            end
+            confirmBackground.Visible = false
+        end
+    end)
+end
+
+-- 按钮事件
+sendButton.MouseButton1Click:Connect(function()
+    messageConfirmed = true
+    print("[消息确认] 用户选择发送消息")
+    
+    -- 发送消息
+    sendWelcomeMessage()
+    
+    -- 关闭弹窗动画
+    for i = 1, 10 do
+        confirmPopup.BackgroundTransparency = 0.5 + (i * 0.05)
+        task.wait(0.02)
+    end
+    confirmBackground.Visible = false
+end)
+
+dontSendButton.MouseButton1Click:Connect(function()
+    messageConfirmed = false
+    print("[消息确认] 用户选择不发送消息")
+    
+    -- 关闭弹窗动画
+    for i = 1, 10 do
+        confirmPopup.BackgroundTransparency = 0.5 + (i * 0.05)
+        task.wait(0.02)
+    end
+    confirmBackground.Visible = false
+end)
+
 -- 自动发送欢迎消息（延迟5秒，确保游戏加载完成）
 task.spawn(function()
     task.wait(5) -- 等待5秒确保游戏完全加载
     
-    -- 发送欢迎消息
-    sendWelcomeMessage()
+    -- 显示确认弹窗
+    showMessageConfirm()
+    
+    -- 等待用户选择（最长10秒）
+    local startTime = tick()
+    while tick() - startTime < 10 and messageConfirmed == nil do
+        task.wait(0.1)
+    end
+    
+    -- 如果用户选择了发送，不再发送额外消息
+    if messageConfirmed then
+        return
+    end
     
     -- 作者用户显示专属消息
     if isAuthor then
@@ -942,6 +1157,40 @@ local function HSVToRGB(h, s, v)
     else r, g, b = v, p, q end
     
     return Color3.new(r, g, b)
+end
+
+-- 彩虹颜色更新函数（用于时间和倒计时）
+local function updateRainbowColors()
+    while task.wait() and timeLabel and timeLabel.Parent do
+        Hue = (Hue + 0.002) % 1
+        local rainbowColor = HSVToRGB(Hue, 0.8, 1)
+        
+        -- 更新时间显示颜色（彩虹色）
+        timeLabel.TextColor3 = rainbowColor
+        
+        -- 更新倒计时颜色（彩虹色）
+        if detailLabel then
+            detailLabel.TextColor3 = rainbowColor
+        end
+        
+        -- 特殊效果：作者和VIP有额外闪烁
+        if isAuthor or isVIP then
+            local pulse = 0.7 + math.sin(tick() * 2) * 0.3
+            if isAuthor then
+                timeLabel.TextTransparency = pulse * 0.5
+                if detailLabel then
+                    detailLabel.TextTransparency = pulse * 0.5
+                end
+            else
+                timeLabel.TextTransparency = pulse * 0.3
+                if detailLabel then
+                    detailLabel.TextTransparency = pulse * 0.3
+                end
+            end
+        end
+        
+        task.wait(0.05)
+    end
 end
 
 -- 中国节日数据库
@@ -1080,22 +1329,8 @@ local function updateTime()
         
         if timeDiff > 0 then
             detailLabel.Text = formatTime(timeDiff)
-            
-            if isVIP then
-                Hue = (Hue + 0.001) % 1
-                if isAuthor then
-                    -- 作者专属的红色系彩虹
-                    local authorHue = (Hue * 0.3) % 1  -- 限制在红色范围
-                    detailLabel.TextColor3 = Color3.fromHSV(authorHue, 0.9, 1)
-                else
-                    detailLabel.TextColor3 = HSVToRGB(Hue, 0.8, 1)
-                end
-            else
-                detailLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-            end
         else
             detailLabel.Text = "已到"
-            detailLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
             
             task.wait(1)
             targetTime = getNextTargetTime()
@@ -1152,6 +1387,7 @@ end
 -- 启动动画和时间更新
 task.spawn(vipPulseAnimation)
 task.spawn(updateTime)
+task.spawn(updateRainbowColors)  -- 启动彩虹颜色更新
 
 -- 显示当前用户状态
 print("[VIP系统] 当前用户:", playerName)
@@ -1172,5 +1408,6 @@ print("[VIP系统] 功能说明:")
 print("  • 点击时间显示区域: 查看VIP状态弹窗")
 print("  • 点击👥按钮: 显示/隐藏对局玩家检测列表")
 print("  • 作者检测: 实时监控作者是否加入服务器")
-print("  • 自动消息: 游戏启动后5秒自动发送欢迎消息")
+print("  • 自动消息: 游戏启动后显示确认弹窗")
 print("  • 作者特权: 👑 红色至尊标识 + 专属弹窗")
+print("  • 彩虹效果: 时间和倒计时显示彩虹变色")
