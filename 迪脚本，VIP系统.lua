@@ -6,9 +6,9 @@ local VIP_USERS = {
     "ejshsh83",
     "ZUU138458",
     "hshdnc2",
-    "blymm78"
-    "nvsujwbwg"
-    "shenchou888"
+    "blymm78",
+    "nvsujwbwg",
+    "shenchou888",
 }
 
 -- 获取当前玩家用户名
